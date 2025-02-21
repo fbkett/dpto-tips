@@ -1,95 +1,139 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
+import Link from 'next/link';
+
+const rentalTips = [
+  {
+    title: "Investigación Previa",
+    tips: [
+      "Investiga el barrio en diferentes horarios",
+      "Verifica la proximidad al transporte público",
+      "Busca servicios cercanos (supermercados, farmacias, etc.)",
+      "Consulta los precios promedio de la zona"
+    ]
+  },
+  {
+    title: "Aspectos Legales",
+    tips: [
+      "Verifica que el propietario sea el titular real",
+      "Lee detenidamente el contrato antes de firmar",
+      "Consulta sobre expensas y servicios incluidos",
+      "Pregunta sobre las políticas de renovación"
+    ]
+  },
+  {
+    title: "Seguridad",
+    tips: [
+      "Evalúa la seguridad del edificio",
+      "Consulta sobre cámaras y personal de seguridad",
+      "Verifica el estado de cerraduras y ventanas",
+      "Pregunta sobre la seguridad del barrio"
+    ]
+  },
+  {
+    title: "Estado del Inmueble",
+    tips: [
+      "Revisa signos de humedad o filtraciones",
+      "Verifica el funcionamiento de servicios básicos",
+      "Examina el estado de pisos y paredes",
+      "Comprueba la ventilación natural"
+    ]
+  }
+];
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <Box component="main" sx={{ 
+      p: { xs: 2, sm: 4 },
+      maxWidth: 'lg', 
+      mx: 'auto' 
+    }}>
+      <Typography 
+        variant="h3" 
+        component="h1" 
+        align="center" 
+        gutterBottom
+        sx={{ 
+          fontSize: { xs: '2rem', sm: '3rem' }
+        }}
+      >
+        Guía para Alquilar un Departamento
+      </Typography>
+      
+      <Typography 
+        variant="h6" 
+        align="center" 
+        color="text.secondary" 
+        sx={{ 
+          mb: { xs: 3, sm: 6 },
+          fontSize: { xs: '1rem', sm: '1.25rem' }
+        }}
+      >
+        Tips esenciales para encontrar tu próximo hogar
+      </Typography>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <Grid container spacing={2}>
+        {rentalTips.map((section) => (
+          <Grid item xs={12} md={6} key={section.title}>
+            <Card 
+              variant="outlined" 
+              sx={{ 
+                height: '100%',
+                '&:hover': {
+                  boxShadow: 1,
+                  transition: 'box-shadow 0.3s ease-in-out'
+                }
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Typography 
+                  variant="h5" 
+                  component="h2" 
+                  gutterBottom 
+                  color="primary"
+                  sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+                >
+                  {section.title}
+                </Typography>
+                <Box component="ul" sx={{ pl: 2, m: 0 }}>
+                  {section.tips.map((tip) => (
+                    <Typography 
+                      component="li" 
+                      key={tip}
+                      sx={{ 
+                        mb: 1,
+                        fontSize: { xs: '0.9rem', sm: '1rem' }
+                      }}
+                    >
+                      {tip}
+                    </Typography>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box sx={{ textAlign: 'center', mt: { xs: 3, sm: 6 } }}>
+        <Link href="/checklist" passHref style={{ textDecoration: 'none' }}>
+          <Button 
+            variant="contained" 
+            size="large"
+            sx={{ 
+              px: { xs: 3, sm: 4 }, 
+              py: { xs: 1.5, sm: 2 },
+              fontSize: { xs: '1rem', sm: '1.1rem' },
+              width: { xs: '100%', sm: 'auto' },
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                transition: 'transform 0.2s'
+              }
+            }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            Ir a la Checklist de Visita
+          </Button>
+        </Link>
+      </Box>
+    </Box>
   );
 }
