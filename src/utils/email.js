@@ -1,9 +1,21 @@
 export async function sendEmail(email, checklist) {
-  // Aquí implementaremos la lógica de envío de email
-  // Por ahora solo console.log
-  console.log('Enviando email a:', email);
-  console.log('Checklist:', checklist);
-  
-  // TODO: Implementar el envío real de emails
-  // Podrías usar servicios como SendGrid, Amazon SES, etc.
+  try {
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, checklist }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al enviar el email');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
 } 

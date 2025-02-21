@@ -12,6 +12,8 @@ import {
   Button,
   FormControlLabel,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 
 const initialChecklist = [
@@ -43,6 +45,11 @@ const initialChecklist = [
 export default function ChecklistForm() {
   const [checklist, setChecklist] = useState(initialChecklist);
   const [email, setEmail] = useState('');
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
   const handleCheckboxChange = (id) => {
     setChecklist(prev =>
@@ -60,105 +67,139 @@ export default function ChecklistForm() {
     );
   };
 
+  const handleClose = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
-      alert('Por favor ingresa un email');
+      setSnackbar({
+        open: true,
+        message: 'Por favor ingresa un email',
+        severity: 'error'
+      });
       return;
     }
 
     try {
       await sendEmail(email, checklist);
-      alert('Lista enviada correctamente!');
+      setSnackbar({
+        open: true,
+        message: '¡Lista enviada correctamente!',
+        severity: 'success'
+      });
+      setEmail('');
     } catch (error) {
-      alert('Error al enviar el email');
+      setSnackbar({
+        open: true,
+        message: 'Error al enviar el email',
+        severity: 'error'
+      });
     }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
-      <Grid container spacing={2}>
-        {checklist.map(item => (
-          <Grid item xs={12} md={6} key={item.id}>
-            <Card 
-              variant="outlined" 
-              sx={{
-                '&:hover': {
-                  boxShadow: 1,
-                },
-                height: '100%'
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={item.checked}
-                        onChange={() => handleCheckboxChange(item.id)}
-                        color="primary"
-                      />
-                    }
-                    label={
-                      <Typography 
-                        variant="subtitle1" 
-                        sx={{ 
-                          textDecoration: item.checked ? 'line-through' : 'none',
-                          color: item.checked ? 'text.secondary' : 'text.primary'
-                        }}
-                      >
-                        {item.label}
-                      </Typography>
-                    }
-                  />
-                  <TextField
-                    multiline
-                    rows={2}
-                    value={item.notes}
-                    onChange={(e) => handleNotesChange(item.id, e.target.value)}
-                    placeholder="Agregar notas..."
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+    <>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+        <Grid container spacing={2}>
+          {checklist.map(item => (
+            <Grid item xs={12} md={6} key={item.id}>
+              <Card 
+                variant="outlined" 
+                sx={{
+                  '&:hover': {
+                    boxShadow: 1,
+                  },
+                  height: '100%'
+                }}
+              >
+                <CardContent>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={item.checked}
+                          onChange={() => handleCheckboxChange(item.id)}
+                          color="primary"
+                        />
+                      }
+                      label={
+                        <Typography 
+                          variant="subtitle1" 
+                          sx={{ 
+                            textDecoration: item.checked ? 'line-through' : 'none',
+                            color: item.checked ? 'text.secondary' : 'text.primary'
+                          }}
+                        >
+                          {item.label}
+                        </Typography>
+                      }
+                    />
+                    <TextField
+                      multiline
+                      rows={2}
+                      value={item.notes}
+                      onChange={(e) => handleNotesChange(item.id, e.target.value)}
+                      placeholder="Agregar notas..."
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
 
-      <Box sx={{ 
-        mt: 4, 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center',
-        gap: 2
-      }}>
-        <TextField
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Tu correo electrónico"
-          variant="outlined"
-          fullWidth
-          sx={{ maxWidth: 400 }}
-        />
-        <Button 
-          type="submit"
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{ 
-            minWidth: 200,
-            '&:hover': {
-              backgroundColor: 'primary.dark'
-            }
-          }}
-        >
-          Enviar lista por email
-        </Button>
+        <Box sx={{ 
+          mt: 4, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+          gap: 2
+        }}>
+          <TextField
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Tu correo electrónico"
+            variant="outlined"
+            fullWidth
+            sx={{ maxWidth: 400 }}
+          />
+          <Button 
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{ 
+              minWidth: 200,
+              '&:hover': {
+                backgroundColor: 'primary.dark'
+              }
+            }}
+          >
+            Enviar lista por email
+          </Button>
+        </Box>
       </Box>
-    </Box>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleClose} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 } 
